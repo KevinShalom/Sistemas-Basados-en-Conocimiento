@@ -1,6 +1,5 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; BASE DE CONOCIMIENTOS - SISTEMA DE COMPRAS CLIPS ;;
-;; Versión: Corrigida - slots planos en 'orden'     ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (deftemplate smartphone
@@ -92,8 +91,7 @@
 ;; 3. REGLAS DE NEGOCIO (20)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; [Las mismas 20 reglas que ya desarrollamos están aquí sin cambios]
-;; (Puedes copiar y pegar desde el bloque anterior o pedirme exportarlas en .clp si lo deseas)
+;; [20 reglas]
 ;; 1. Clasificar como menudista si compra menos de 10
 (defrule clasificar-menudista
    (orden (qty ?q&:(< ?q 10)))
