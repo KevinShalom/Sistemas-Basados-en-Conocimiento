@@ -1,5 +1,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; BASE DE CONOCIMIENTOS - SISTEMA DE COMPRAS CLIPS ;;
+;; Versión: Final con template de cliente con ID ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (deftemplate smartphone
@@ -19,6 +20,7 @@
    (slot precio))
 
 (deftemplate cliente
+   (slot id)    ;; Nuevo slot para el ID único del cliente
    (slot nombre)
    (slot tipo)) ; menudista o mayorista
 
@@ -87,43 +89,43 @@
   (stock (marca hp) (modelo Pavilion) (cantidad 15))
   (stock (marca lenovo) (modelo ThinkPadX1) (cantidad 18))
 )
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; 3. REGLAS DE NEGOCIO (20)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; [20 reglas]
 ;; 1. Clasificar como menudista si compra menos de 10
 (defrule clasificar-menudista
    (orden (qty ?q&:(< ?q 10)))
 =>
-   (assert (cliente (nombre anonimo) (tipo menudista)))
-   (printout t "Cliente clasificado como MENUDISTA." crlf))
+   (assert (cliente (id 1) (nombre Juan) (tipo menudista)))
+   (printout t "Cliente ID " 1 " clasificado como MENUDISTA." crlf))
 
 ;; 2. Clasificar como mayorista si compra 10 o más
 (defrule clasificar-mayorista
    (orden (qty ?q&:(>= ?q 10)))
 =>
-   (assert (cliente (nombre anonimo) (tipo mayorista)))
-   (printout t "Cliente clasificado como MAYORISTA." crlf))
+   (assert (cliente (id 2) (nombre Ana) (tipo mayorista)))
+   (printout t "Cliente ID " 2 " clasificado como MAYORISTA." crlf))
 
 ;; 3. Descuento para mayoristas
 (defrule descuento-mayorista
-   (cliente (tipo mayorista))
+   (cliente (id ?id) (tipo mayorista))
    (orden (qty ?q))
 =>
-   (printout t "Descuento: 10% aplicado por ser MAYORISTA." crlf))
+   (printout t "Cliente ID " ?id " recibe un Descuento: 10% aplicado por ser MAYORISTA." crlf))
 
 ;; 4. Recomendación para mayoristas
 (defrule recomendacion-mayorista
-   (cliente (tipo mayorista))
+   (cliente (id ?id) (tipo mayorista))
 =>
-   (printout t "Recomendación: Cotiza volumen para beneficios adicionales." crlf))
+   (printout t "Cliente ID " ?id " Recomendación: Cotiza volumen para beneficios adicionales." crlf))
 
 ;; 5. Recomendación para menudistas
 (defrule recomendacion-menudista
-   (cliente (tipo menudista))
+   (cliente (id ?id) (tipo menudista))
 =>
-   (printout t "Recomendación: Aprovecha promociones de accesorios y fundas." crlf))
+   (printout t "Cliente ID " ?id " Recomendación: Aprovecha promociones de accesorios y fundas." crlf))
 
 ;; 6. Descuento extra por usar tarjeta VISA
 (defrule visa-desc-accesorios
@@ -226,12 +228,3 @@
    (bind ?vales (* (div ?total 1000) 100))
    (assert (vale (valor ?vales)))
    (printout t "Promoción: $" ?vales " en vales por compra conjunta." crlf))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; 4. PRUEBA DEL SISTEMA
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;; Ejemplo de orden para activar razonamiento:
-;; (assert (orden (marca apple) (modelo iPhone16) (qty 30) (banco banamex) (grupo oro)))
-;; (run)
-
